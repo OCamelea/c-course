@@ -24,6 +24,7 @@ namespace CS.Impl._03_Linq
 
         public IDictionary<string, int> GetFileCountByExtension(IEnumerable<string> files)
         {
+            //List<string> extensionsList = files.GroupBy (file => file.Split("."));
             throw new NotImplementedException();
         }
 
