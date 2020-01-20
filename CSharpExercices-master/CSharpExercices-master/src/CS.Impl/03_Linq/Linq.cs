@@ -9,7 +9,7 @@ namespace CS.Impl._03_Linq
     {
         public IEnumerable<string> FindStringsWhichStartsAndEndsWithSpecificCharacter(string startCharacter, string endCharacter, IEnumerable<string> strings)
         {
-           return strings.Where(word => word.StartsWith(startCharacter) && word.EndsWith(endCharacter));
+            return strings.Where(word => word.StartsWith(startCharacter) && word.EndsWith(endCharacter));
         }
 
         public IEnumerable<int> GetGreaterNumbers(int limit, IEnumerable<int> numbers)
@@ -19,18 +19,24 @@ namespace CS.Impl._03_Linq
 
         public IEnumerable<int> GetTopNRecords(int limit, IEnumerable<int> numbers)
         {
-           return numbers.OrderByDescending(number => number).Take(limit);
+            return numbers.OrderByDescending(number => number).Take(limit);
         }
 
         public IDictionary<string, int> GetFileCountByExtension(IEnumerable<string> files)
         {
-            //List<string> extensionsList = files.GroupBy (file => file.Split("."));
-            throw new NotImplementedException();
+            var groupedFiles = files.Select(file => Path.GetExtension(file).TrimStart('.').ToLower())
+             .GroupBy(group => group,
+                 (extension, extensionCount) => new { Extension = extension, Count = extensionCount.Count() });
+
+            return groupedFiles.ToDictionary(e => e.Extension, e => e.Count);
         }
 
         public IEnumerable<Tuple<string, string, int, double>> GetFinalReceipe(List<Item> items, List<Client> clients, List<Purchase> purchases)
         {
-            throw new NotImplementedException();
+            return from purchase in purchases
+                   join item in items on purchase.ItemId equals item.Id
+                   join client in clients on purchase.ClientId equals client.Id
+                   select new Tuple<string, string, int, double>(client.Name, item.Label, purchase.Quantity, item.Price);
         }
     }
 
